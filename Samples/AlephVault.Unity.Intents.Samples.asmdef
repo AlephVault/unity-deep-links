@@ -1,0 +1,16 @@
+{
+    "name": "AlephVault.Unity.DeepLinks.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:00fdfe2a387be0439854393abe37bd59"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
