@@ -1,0 +1,13 @@
+{
+  "name": "com.alephvault.unity.deeplinks",
+  "version": "0.0.1",
+  "displayName": "Aleph Vault - Unity - Deep Links",
+  "description": "Utilities to process application deep links.",
+  "unity": "2023.1",
+  "dependencies": {},
+  "author": {
+    "name": "Aleph Vault",
+    "email": "info@alephvault.com",
+    "url": "http://www.alephvault.com"
+  }
+}
