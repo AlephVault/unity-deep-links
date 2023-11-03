@@ -16,12 +16,49 @@ namespace AlephVault.Unity.DeepLinks
             /// </summary>
             public abstract class DeepLinkAware : MonoBehaviour
             {
+                /// <summary>
+                ///   This type lets the user determine what to
+                ///   do with an incoming deep link.
+                /// </summary>
+                public enum DeepLinkProcessType
+                {
+                    /// <summary>
+                    ///   Defer stands for some sort of "taking
+                    ///   note" of the deep link (only THE LAST
+                    ///   ONE will be kept) to be processed at
+                    ///   a later time, manually.
+                    /// </summary>
+                    Defer,
+                    /// <summary>
+                    ///   Discard means two things: discard the
+                    ///   current, incoming, deep link, and also
+                    ///   discard whatever is deferred.
+                    /// </summary>
+                    Discard,
+                    /// <summary>
+                    ///   Immediate means processing the deep link
+                    ///   as soon as it arrives. Whatever is deferred
+                    ///   before, is also discarded.
+                    /// </summary>
+                    Immediate
+                }
+                
                 // The router to use.
                 private Router router;
                 
                 // The initial absolute uri.
                 private string initialDeepLink;
                 
+                // The deferred uri. While it might be similar to the
+                // initial uri, this one is actually deferred from the
+                // user's choice, even for the initial deep link that
+                // was stored on Awake. The user might want to trigger
+                // this deep link later. New, arriving, deep links will
+                // override this value, so it is a good idea to process
+                // this as soon as possible, or otherwise not fear that
+                // this value is lost.
+                private string deferredDeepLink;
+
                 private void Awake()
                 {
                     router = MakeRouter();
@@ -60,8 +97,34 @@ namespace AlephVault.Unity.DeepLinks
                 // properly.
                 private void ProcessDeepLink(string link)
                 {
+                    switch (GetProcessType())
+                    {
+                        case DeepLinkProcessType.Defer:
+                            deferredDeepLink = link;
+                            break;
+                        case DeepLinkProcessType.Immediate:
+                            deferredDeepLink = link;
+                            ProcessCurrentDeepLink();
+                            break;
+                        default:
+                            deferredDeepLink = null;
+                            break;
+                    }
+                }
+
+                /// <summary>
+                ///   Processes the currently deferred deep link.
+                ///   Intended for the user to invoke it when they
+                ///   feel is the best moment.
+                /// </summary>
+                public void ProcessCurrentDeepLink()
+                {
+                    if (deferredDeepLink == null) return;
+                    
                     try
                     {
+                        string link = deferredDeepLink;
+                        deferredDeepLink = null;
                         router.ProcessDeepLink(new Uri(link));
                     }
                     catch (Exception e)
@@ -76,6 +139,14 @@ namespace AlephVault.Unity.DeepLinks
                 /// </summary>
                 /// <returns>The router</returns>
                 protected abstract Router MakeRouter();
+
+                /// <summary>
+                ///   Gets the current processing type.
+                /// </summary>
+                protected virtual DeepLinkProcessType GetProcessType()
+                {
+                    return DeepLinkProcessType.Defer;
+                }
             }
         }
     }
