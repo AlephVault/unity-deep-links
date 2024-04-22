@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Unity.Plastic.Antlr3.Runtime.Misc;
 
 namespace AlephVault.Unity.DeepLinks
 {
@@ -21,7 +20,7 @@ namespace AlephVault.Unity.DeepLinks
                 // Builds the matches.
                 private static List<IReadOnlyList<string>> BuildMatches(Match match)
                 {
-                    List<IReadOnlyList<string>> allMatches = new ListStack<IReadOnlyList<string>>();
+                    List<IReadOnlyList<string>> allMatches = new List<IReadOnlyList<string>>();
 
                     foreach(Group group in match.Groups)
                     {
